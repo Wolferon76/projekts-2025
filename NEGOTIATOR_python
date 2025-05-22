@@ -1,0 +1,62 @@
+
+import random
+from tabulate import tabulate
+
+class Situation:
+    def __init__(self, description, goal, options):
+        self.description = description
+        self.goal = goal
+        self.options = options  # Saraksts ar 4 variantiem (katrs: (teksts, panākumu procents 0-100))
+
+def play_situation(situation):
+    print("\n📌 Situācija:")
+    print(situation.description)
+    print(f"🎯 Mērķis: {situation.goal}\n")
+
+    # Veidojam tabulu ar atbilžu variantiem un panākumu līmeni
+    table_data = []
+    for i, (text, success) in enumerate(situation.options, 1):
+        table_data.append([i, text, f"{success}%"])
+
+    print("Izvēlieties vienu no šādiem atbilžu variantiem:\n")
+    print(tabulate(table_data, headers=["Nr", "Atbildes variants", "Panākumu līmenis"], tablefmt="fancy_grid"))
+
+    choice = 0
+    while choice not in [1, 2, 3, 4]:
+        try:
+            choice = int(input("\nJūsu izvēle (1-4): "))
+        except ValueError:
+            continue
+
+    selected_option = situation.options[choice - 1]
+    success_rate = selected_option[1]
+
+    print(f"\n✅ Jūs izvēlējāties: {selected_option[0]}")
+    print(f"📊 Panākumu līmenis: {success_rate}%")
+
+ # Parbaude, kad panākumu procents >= 75
+    if success_rate >= 75:
+        print("🎉 Lieliski! Jūs pārliecinoši virzāties uz mērķi.")
+
+    elif success_rate >= 50:
+        print("🙂 Pieņemams rezultāts, bet ir kur tiekties.")
+# Parbaude, kad panākumu procents >= 50
+    else:
+# Parbaude, kad panākumu procents nav >= 75 vai panākumu procents >= 50
+        print("⚠️ Sarunas neveicas jūsu labā...")
+
+# Piemēra situācija
+situation1 = Situation(
+    description="Jūs vadāt sarunas ar bruņotu noziedznieku, kurš tur ķīlniekus veikalā.",
+    goal="Pārliecināt noziedznieku miermīlīgi atbrīvot ķīlniekus.",
+    options=[
+        ("Piedāvāt noziedzniekam drošu izeju un advokātu", 80),
+        ("Pavēlēt nekavējoties padoties", 30),
+        ("Mēģināt izraisīt līdzjūtību, stāstot personīgu stāstu", 60),
+        ("Dot viltus solījumus un mēģināt aizturēt", 50)
+    ]
+)
+
+# Spēles palaišana
+play_situation(situation1)
+
